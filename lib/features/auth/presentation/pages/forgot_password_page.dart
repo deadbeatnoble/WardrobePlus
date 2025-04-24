@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:WardrobePlus/core/themes/app_pallet.dart';
 import 'package:WardrobePlus/features/auth/presentation/pages/login_page.dart';
 import 'package:flutter/material.dart';
@@ -10,13 +11,58 @@ class ForgotPasswordPage extends StatefulWidget {
 }
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
+  final TextEditingController _emailController = TextEditingController();
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  Future<void> _sendPasswordResetEmail() async {
+    try {
+      await _auth.sendPasswordResetEmail(email: _emailController.text.trim());
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Password reset email sent!")),
+      );
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+      );
+    } on FirebaseAuthException catch (e) {
+      String errorMessage = "An error occurred.";
+      if (e.code == 'user-not-found') {
+        errorMessage = "No user found for that email.";
+      } else if (e.code == 'invalid-email') {
+        errorMessage = "The email address is invalid.";
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage)),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("An unexpected error occurred.")),
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _emailController.clear();
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppPallet.lightBackgroundColor,
         leading: IconButton(onPressed: () {
-          Navigator.push(
+          Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => LoginPage()),
             );
@@ -48,9 +94,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 ),
               ),
               SizedBox(height: 60),
-              TextField(decoration: InputDecoration(hintText: "Enter email")),
+              TextField(controller: _emailController, decoration: InputDecoration(hintText: "Enter email")),
               SizedBox(height: 60),
-              ElevatedButton(onPressed: () {}, child: Text("Send"))],
+              ElevatedButton(onPressed: _sendPasswordResetEmail, child: Text("Send"))],
           ),
         ),
       ),

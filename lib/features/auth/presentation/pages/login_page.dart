@@ -1,3 +1,5 @@
+import 'package:WardrobePlus/features/home/presentation/pages/home.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:WardrobePlus/core/themes/app_pallet.dart';
 import 'package:WardrobePlus/features/auth/presentation/pages/forgot_password_page.dart';
 import 'package:WardrobePlus/features/auth/presentation/pages/register_page.dart';
@@ -12,11 +14,70 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isObscure = true;
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  Future<void> _signInUser() async {
+    try {
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      if (userCredential.user != null) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Login successful!")));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      String errorMessage = "An error occurred.";
+      if (e.code == 'user-not-found') {
+        errorMessage = "No user found for that email.";
+      } else if (e.code == 'wrong-password') {
+        errorMessage = "Wrong password provided for that user.";
+      } else if (e.code == 'invalid-email') {
+        errorMessage = "The email address is invalid.";
+      }
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(errorMessage)));
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("An unexpected error occurred.")));
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _emailController.clear();
+    _passwordController.clear();
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        minimum: const EdgeInsets.only(top: 100, right: 32, left: 32, bottom: 50,
+        minimum: const EdgeInsets.only(
+          top: 100,
+          right: 32,
+          left: 32,
+          bottom: 50,
         ),
         child: SingleChildScrollView(
           child: Column(
@@ -41,12 +102,26 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               SizedBox(height: 60),
-              TextField(decoration: InputDecoration(hintText: "Email")),
+              TextField(
+                controller: _emailController,
+                decoration: InputDecoration(hintText: "Email"),
+              ),
               SizedBox(height: 15),
               TextField(
+                controller: _passwordController,
+                obscureText: _isObscure,
                 decoration: InputDecoration(
                   hintText: "Password",
-                  suffixIcon: Icon(Icons.visibility_off_outlined),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _isObscure ? Icons.visibility_off : Icons.visibility,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isObscure = !_isObscure;
+                      });
+                    },
+                  ),
                 ),
               ),
               SizedBox(height: 15),
@@ -54,23 +129,26 @@ class _LoginPageState extends State<LoginPage> {
                 alignment: Alignment.centerRight,
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
+                      MaterialPageRoute(
+                        builder: (context) => ForgotPasswordPage(),
+                      ),
                     );
                   },
                   child: Text(
-                  "Forgot password",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: AppPallet.lightHintTextColor,
+                    "Forgot password",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: AppPallet.lightHintTextColor,
+                    ),
+                    textAlign: TextAlign.end,
                   ),
-                  textAlign: TextAlign.end,
-                ),)
+                ),
               ),
               SizedBox(height: 60),
-              ElevatedButton(onPressed: () {}, child: Text("Sign In")),
+              ElevatedButton(onPressed: _signInUser, child: Text("Sign In")),
               SizedBox(height: 15),
               Center(
                 child: Text.rich(
@@ -96,7 +174,7 @@ class _LoginPageState extends State<LoginPage> {
                         recognizer:
                             TapGestureRecognizer()
                               ..onTap = () {
-                                Navigator.push(
+                                Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => RegisterPage(),
