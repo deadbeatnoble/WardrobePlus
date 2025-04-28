@@ -108,6 +108,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   onPressed: () {
                     context.read<AuthBloc>().add(
                       RegisterEvent(
+                        name: _nameController.text.trim(),
                         email: _emailController.text.trim(),
                         password: _passwordController.text.trim(),
                       ),

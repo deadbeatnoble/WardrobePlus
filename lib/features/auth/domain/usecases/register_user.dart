@@ -5,7 +5,7 @@ class RegisterUser {
 
   RegisterUser(this.repository);
 
-  Future<void> call(String email, String password) async {
-    return await repository.registerUser(email, password);
+  Future<void> call(String name, String email, String password) async {
+    return await repository.registerUser(name, email, password);
   }
 }

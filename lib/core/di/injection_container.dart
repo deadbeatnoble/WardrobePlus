@@ -5,6 +5,7 @@ import 'package:WardrobePlus/features/auth/domain/usecases/login_user.dart';
 import 'package:WardrobePlus/features/auth/domain/usecases/register_user.dart';
 import 'package:WardrobePlus/features/auth/domain/usecases/reset_password.dart';
 import 'package:WardrobePlus/features/auth/presentation/blocs/auth_bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 
@@ -12,7 +13,12 @@ final sl = GetIt.instance;
 
 Future<void> init() async {
   //datasource
-  sl.registerLazySingleton(() => FirebaseAuthDatasource(FirebaseAuth.instance));
+  sl.registerLazySingleton(
+    () => FirebaseAuthDatasource(
+      FirebaseAuth.instance,
+      FirebaseFirestore.instance,
+    ),
+  );
 
   //repository
   sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl()));
@@ -24,10 +30,6 @@ Future<void> init() async {
 
   //bloc
   sl.registerLazySingleton(
-    () => AuthBloc(
-      loginUser: sl(),
-      registerUser: sl(),
-      resetPassword: sl(),
-    ),
+    () => AuthBloc(loginUser: sl(), registerUser: sl(), resetPassword: sl()),
   );
 }
