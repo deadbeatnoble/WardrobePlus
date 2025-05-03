@@ -2,6 +2,7 @@ import 'package:WardrobePlus/core/di/injection_container.dart';
 import 'package:WardrobePlus/core/themes/app_theme.dart';
 import 'package:WardrobePlus/features/auth/presentation/blocs/auth_bloc.dart';
 import 'package:WardrobePlus/features/auth/presentation/pages/getting_started.dart';
+import 'package:WardrobePlus/features/wardrobe/presentation/pages/wardrobe_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightThemeMode,
-        home: GettingStartedPage(),
+        home: WardrobePage(),
       ),
     );
   }

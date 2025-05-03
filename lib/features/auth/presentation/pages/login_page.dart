@@ -3,6 +3,7 @@ import 'package:WardrobePlus/core/themes/app_pallet.dart';
 import 'package:WardrobePlus/features/auth/presentation/pages/forgot_password_page.dart';
 import 'package:WardrobePlus/features/auth/presentation/pages/register_page.dart';
 import 'package:WardrobePlus/features/home/presentation/pages/home.dart';
+import 'package:WardrobePlus/features/wardrobe/presentation/pages/wardrobe_page.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
         if (state is AuthSuccess) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => HomePage()),
+            MaterialPageRoute(builder: (context) => WardrobePage()),
           );
         }
       },
