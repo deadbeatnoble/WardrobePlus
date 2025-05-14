@@ -1,8 +1,12 @@
 import 'dart:io';
 
+import 'package:WardrobePlus/core/di/injection_container.dart';
 import 'package:WardrobePlus/features/wardrobe/domain/entities/wardrobe_item.dart';
+import 'package:WardrobePlus/features/wardrobe/domain/usecases/save_wardrobe_item.dart';
+import 'package:WardrobePlus/features/wardrobe/presentation/blocs/wardrobe_bloc.dart';
 import 'package:WardrobePlus/features/wardrobe/presentation/pages/add_item_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
 class WardrobePage extends StatefulWidget {
@@ -26,7 +30,10 @@ class _WardrobePageState extends State<WardrobePage> {
       final result = await Navigator.push<WardrobeItem>(
         context,
         MaterialPageRoute(
-          builder: (_) => AddItemPage(imagePath: pickedImage.path),
+          builder: (context) => BlocProvider(
+            create: (_) => WardrobeBloc(saveWardrobeItem: sl<SaveWardrobeItem>()),
+            child: AddItemPage(imagePath: pickedImage.path)
+          ),
         ),
       );
 

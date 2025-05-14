@@ -8,15 +8,29 @@ class LoginEvent extends AuthEvent {
 
   LoginEvent({required this.email, required this.password});
 }
+
 class RegisterEvent extends AuthEvent {
   final String name;
   final String email;
   final String password;
 
-  RegisterEvent({required this.name, required this.email, required this.password});
+  RegisterEvent({
+    required this.name,
+    required this.email,
+    required this.password,
+  });
 }
+
 class ResetEvent extends AuthEvent {
   final String email;
 
   ResetEvent({required this.email});
 }
+
+class SetUserIdEvent extends AuthEvent {
+  final String userId;
+
+  SetUserIdEvent(this.userId);
+}
+
+class ClearUserIdEvent extends AuthEvent {}
