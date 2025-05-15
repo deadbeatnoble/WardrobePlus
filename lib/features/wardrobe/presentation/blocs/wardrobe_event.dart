@@ -8,3 +8,9 @@ class SaveWardrobeItemEvent extends WardrobeEvent {
 
   SaveWardrobeItemEvent({required this.userId, required this.item});
 }
+
+class LoadWardrobeItemEvent extends WardrobeEvent {
+  final String userId;
+
+  LoadWardrobeItemEvent({required this.userId});
+}

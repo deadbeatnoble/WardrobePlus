@@ -11,4 +11,9 @@ class WardrobeRepositoryImpl extends WardrobeRepository {
   Future<void> saveWardrobeItem(String userId, WardrobeItem item) async {
     await firebaseWardrobeDatasource.saveWardrobeItem(userId, item);
   }
+
+  @override
+  Future<List<WardrobeItem>> loadWardrobeItems(String userId) async {
+    return await firebaseWardrobeDatasource.loadWardrobeItems(userId);
+  }
 }

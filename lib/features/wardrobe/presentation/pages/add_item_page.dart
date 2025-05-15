@@ -1,13 +1,10 @@
 import 'dart:io';
 import 'package:WardrobePlus/features/auth/presentation/blocs/auth_bloc.dart';
 import 'package:WardrobePlus/features/wardrobe/domain/entities/wardrobe_item.dart';
-import 'package:WardrobePlus/features/wardrobe/domain/usecases/save_wardrobe_item.dart';
 import 'package:WardrobePlus/features/wardrobe/presentation/blocs/wardrobe_bloc.dart';
 import 'package:WardrobePlus/features/wardrobe/presentation/blocs/wardrobe_event.dart';
 import 'package:WardrobePlus/features/wardrobe/presentation/blocs/wardrobe_state.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddItemPage extends StatefulWidget {
@@ -60,11 +57,11 @@ class _AddItemPageState extends State<AddItemPage> {
   Widget build(BuildContext context) {
     return BlocListener<WardrobeBloc, WardrobeState>(
       listener: (context, state) {
-        if (state is WardrobeSuccess) {
+        if (state is WardrobeItemSaved) {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text(state.message)));
-          Navigator.pop(context);
+          Navigator.pop(context, true);
         } else if (state is WardrobeFailure) {
           ScaffoldMessenger.of(
             context,

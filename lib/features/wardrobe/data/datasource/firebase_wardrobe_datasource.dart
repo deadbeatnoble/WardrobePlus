@@ -17,4 +17,21 @@ class FirebaseWardrobeDatasource {
           'timestamp': FieldValue.serverTimestamp(),
         });
   }
+
+  Future<List<WardrobeItem>> loadWardrobeItems(String userId) async {
+    final snapshot =
+        await fireStore
+            .collection('users')
+            .doc(userId)
+            .collection('wardrobeItems')
+            .get();
+
+    return snapshot.docs.map((doc) {
+      final data = doc.data();
+      return WardrobeItem(
+        imagePath: data['imagePath'],
+        category: data['category'],
+      );
+    }).toList();
+  }
 }
