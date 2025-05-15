@@ -1,23 +1,23 @@
-import 'package:WardrobePlus/features/auth/data/datasources/firebase_auth_datasource.dart';
+import 'package:WardrobePlus/features/auth/data/datasources/supabase_auth_datasource.dart';
 import 'package:WardrobePlus/features/auth/domain/repositories/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository{
-  final FirebaseAuthDatasource firebaseAuthDatasource;
+  final SupabaseAuthDatasource supabaseAuthDatasource;
 
-  AuthRepositoryImpl(this.firebaseAuthDatasource);
+  AuthRepositoryImpl(this.supabaseAuthDatasource);
 
   @override
   Future<void> loginUser(String email, String password) async {
-    return await firebaseAuthDatasource.loginUser(email, password);
+    return await supabaseAuthDatasource.loginUser(email, password);
   }
 
   @override
   Future<void> registerUser(String name, String email, String password) async {
-    return await firebaseAuthDatasource.registerUser(name, email, password);
+    return await supabaseAuthDatasource.registerUser(name, email, password);
   }
 
   @override
   Future<void> resetPassword(String email) async {
-    return await firebaseAuthDatasource.resetPassword(email);
+    return await supabaseAuthDatasource.resetPassword(email);
   }
 }

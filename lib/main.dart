@@ -4,13 +4,18 @@ import 'package:WardrobePlus/features/auth/presentation/blocs/auth_bloc.dart';
 import 'package:WardrobePlus/features/auth/presentation/pages/getting_started.dart';
 import 'package:WardrobePlus/features/wardrobe/presentation/blocs/wardrobe_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'firebase_options.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await dotenv.load(fileName: ".env");
+
+  await Supabase.initialize(
+    url: dotenv.env['url']!,
+    anonKey: dotenv.env['key']!,
+  );
   await init();
   runApp(const MyApp());
 }

@@ -2,8 +2,7 @@ import 'package:WardrobePlus/features/auth/domain/usecases/login_user.dart';
 import 'package:WardrobePlus/features/auth/domain/usecases/register_user.dart';
 import 'package:WardrobePlus/features/auth/domain/usecases/reset_password.dart';
 import 'package:bloc/bloc.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'auth_state.dart';
 part 'auth_event.dart';
@@ -34,7 +33,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await loginUser(event.email, event.password);
       emit(AuthSuccess(message: "Login successful!"));
 
-      final userId = FirebaseAuth.instance.currentUser?.uid;
+      final userId = Supabase.instance.client.auth.currentUser?.id;
+      
       if(userId != null) {
         add(SetUserIdEvent(userId));
       }
