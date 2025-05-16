@@ -97,8 +97,8 @@ class _WardrobePageState extends State<WardrobePage> {
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(12),
-                          child: Image.file(
-                            File(state.items[index].imagePath),
+                          child: Image.network(
+                            state.items[index].imageUrl,
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) {
                               return Center(child: Text("Invalid Image"));

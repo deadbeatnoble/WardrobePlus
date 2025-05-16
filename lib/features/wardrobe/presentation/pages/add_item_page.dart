@@ -44,7 +44,7 @@ class _AddItemPageState extends State<AddItemPage> {
     }
 
     final newItem = WardrobeItem(
-      imagePath: widget.imagePath,
+      imageUrl: widget.imagePath,
       category: _selectedCategory!,
     );
 

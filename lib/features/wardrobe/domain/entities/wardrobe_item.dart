@@ -1,9 +1,9 @@
 class WardrobeItem {
-  final String imagePath;
+  final String imageUrl;
   final String category;
 
   WardrobeItem({
-    required this.imagePath,
+    required this.imageUrl,
     required this.category
   });
 }

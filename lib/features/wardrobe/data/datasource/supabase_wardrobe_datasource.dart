@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:WardrobePlus/features/wardrobe/domain/entities/wardrobe_item.dart';
 
@@ -7,9 +9,18 @@ class SupabaseWardrobeDatasource {
   SupabaseWardrobeDatasource(this.supabase);
 
   Future<void> saveWardrobeItem(String userId, WardrobeItem item) async {
+    final String filePath = 'images/${DateTime.now().millisecondsSinceEpoch}';
+    final File file = File(item.imageUrl);
+
+    await supabase.storage.from('wardrobe-images').upload(filePath, file);
+
+    final imageUrl = supabase.storage
+        .from('wardrobe-images')
+        .getPublicUrl(filePath);
+
     await supabase.from('wardrobe_items').insert({
       'user_id': userId,
-      'image_path': item.imagePath,
+      'image_url': imageUrl,
       'category': item.category,
       'timestamp': DateTime.now().toUtc().toIso8601String(),
     });
@@ -24,7 +35,7 @@ class SupabaseWardrobeDatasource {
 
     return data.map((item) {
       return WardrobeItem(
-        imagePath: item['image_path'],
+        imageUrl: item['image_url'],
         category: item['category'],
       );
     }).toList();
